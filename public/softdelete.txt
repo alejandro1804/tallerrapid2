@@ -1,0 +1,8 @@
+Esto que me comentas me parece muy interesante : 🌀 ¿Qué pasa con las consultas?
+- State::all() no mostrará los eliminados con soft delete
+- State::withTrashed() los muestra todos
+- State::onlyTrashed() solo los eliminados
+- State::restore() para “revivir” un estado eliminado 💡 ¿Por qué usarlo?
+- Conservás el historial completo
+- Evitás errores por eliminar estados que están en uso
+- Te da flexibilidad para “activar/desactivar” sin modificar el diseño 📌 En tu sistema de tickets esto puede ser útil si tenés estados tipo “cancelado”, “cerrado”, etc. y querés inhabilitarlos sin romper relaciones existentes.
