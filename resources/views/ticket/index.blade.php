@@ -97,18 +97,14 @@
 											<td>{{ $ticket->state->name }}</td>
 											<td>{{ $ticket->admission }}</td>
 											<td>{{ $ticket->item->name }}</td>
-                                            
-											<td>{{ $ticket->priority }}</td>
+                                         	<td>{{ $ticket->priority }}</td>
                                             <td>{{ $ticket->author()?->name ?? 'Sin autor' }}</td>
 
-
                                             <td>
-                             
                                                 <form action="{{ route('tickets.destroy',$ticket->id) }}" method="POST">
                                                     <a class="btn btn-sm btn-primary " href="{{ route('tickets.show',$ticket->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
                                                     <a class="btn btn-sm btn-success" href="{{ route('tickets.edit',$ticket->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
                                                     <a class="btn btn-sm btn-warning" href="{{ route('binnacles.index',['id' => $ticket->id]) }}"><i class="fa fa-fw fa-edit"></i>{{ __('Bitacora') }}</a>
-
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
