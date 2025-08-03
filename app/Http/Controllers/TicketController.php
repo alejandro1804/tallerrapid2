@@ -74,55 +74,33 @@ class TicketController extends Controller
 
         return view('ticket.create', compact('ticket', 'items', 'states'));
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    /*  version vieja
+    
     public function store(Request $request)
     {
-        request()->validate(Ticket::$rules);
+        $request->validate([
+            'state_id' => 'required|exists:states,id',
+            'item_id' => 'required|exists:items,id',
+            'flaw' => 'required|string|max:255',
+            'priority' => 'required|in:1,2,3',
+            // otros campos si los hay
+        ]);
 
-        $date = Carbon::now();
-        $date->toDateTimeString(); // muestra fecha y hora
+        // Crear el ticket
+        $ticket = Ticket::create([
+            'state_id' => 1,
+            'item_id' => $request->item_id,
+            'flaw' => $request->flaw,
+            'priority' => $request->priority,
+            'admission' => $request->admission,
+            // otros campos si los hay
+        ]);
 
-        // $request->merge(['admission'=>$date]);
-
-        $ticket = Ticket::create($request->all());
+        // Asociar el usuario autenticado como autor
+        $ticket->users()->attach(auth()->id(), ['role_in_ticket' => 'autor']);
 
         return redirect()->route('tickets.index')
-            ->with('success', 'Ticket created successfully.');
+            ->with('success', 'Ticket creado y vinculado al usuario correctamente.');
     }
-      */
-
-    public function store(Request $request)
-{
-    $request->validate([
-        'state_id' => 'required|exists:states,id',
-        'item_id' => 'required|exists:items,id',
-        'flaw' => 'required|string|max:255',
-        'priority' => 'required|in:1,2,3',
-        // otros campos si los hay
-    ]);
-
-    // Crear el ticket
-    $ticket = Ticket::create([
-        'state_id' => 'NUEVO',
-        'item_id' => $request->item_id,
-        'flaw' => $request->flaw,
-        'priority' => $request->priority,
-        'admission' => $request->admission,
-        // otros campos si los hay
-    ]);
-
-    // Asociar el usuario autenticado como autor
-    $ticket->users()->attach(auth()->id(), ['role_in_ticket' => 'autor']);
-
-    return redirect()->route('tickets.index')
-        ->with('success', 'Ticket creado y vinculado al usuario correctamente.');
-}
 
     /**
      * Display the specified resource.

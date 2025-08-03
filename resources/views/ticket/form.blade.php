@@ -1,23 +1,26 @@
 <div class="box box-info padding-1">
     <div class="box-body">
         @if ($ticket->exists)
-        <div class="form-group">
-            <label for="state_id">{{ __('State') }}</label>
-            <select name="state_id" id="state_id" class="form-control{{ $errors->has('state_id') ? ' is-invalid' : '' }}">
-                <option value="">{{ __('') }}</option>
-                @foreach ($states as $id => $state)
-                    
-                    <option value="{{ $id }}" {{ old('state_id', $ticket->state_id ?? '') == $id ? 'selected' : '' }}>
-                        {{ $state }}
-                    </option>
-                @endforeach
-            </select>
-            @if ($errors->has('state_id'))
-                <div class="invalid-feedback">
-                    {{ $errors->first('state_id') }}
-                </div>
-            @endif
-        </div>
+            <div class="form-group">
+                <label for="state_id">{{ __('State') }}</label>
+                <select name="state_id" id="state_id" class="form-control{{ $errors->has('state_id') ? ' is-invalid' : '' }}">
+                    <option value="">{{ __('') }}</option>
+                    @foreach ($states as $id => $state)
+                        
+                        <option value="{{ $id }}" {{ old('state_id', $ticket->state_id ?? '') == $id ? 'selected' : '' }}>
+                            {{ $state }}
+                        </option>
+                    @endforeach
+                </select>
+                @if ($errors->has('state_id'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('state_id') }}
+                    </div>
+                @endif
+            </div>
+        @else
+            <input type="hidden" name="state_id" value=1 >
+            
         @endif    
 <input type="hidden" name="admission" value="{{ $ticket->admission }}">
 
