@@ -87,14 +87,11 @@
                                 <tbody>
                                 @if($tickets->isEmpty())
                                   <p> NO HAY REGISTROS </P>  
-
                                 @else    
-
                                     @foreach ($tickets as $ticket)
                                         @php
                                              ++$i;  
                                         @endphp
-                                    
                                         <tr>
                                             <td>{{ $ticket->id }}</td>
 											<td>{{ $ticket->state->name }}</td>
