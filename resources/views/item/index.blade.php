@@ -28,18 +28,39 @@
                             <p>{{ $message }}</p>
                         </div>
                     @endif
+  <form method="get" class="mb-3">
+    <div class="row">
+        <div class="col-md-3">
+            <select name="sector_id" class="form-control">
+                <option value="">-- Filtrar por Sector --</option>
+                @foreach($sectors as $id => $name)
+                    <option value="{{ $id }}" {{ request('sector_id') == $id ? 'selected' : '' }}>
+                        {{ $name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="provider_id" class="form-control">
+                <option value="">-- Filtrar por Proveedor --</option>
+                @foreach($providers as $id => $name)
+                    <option value="{{ $id }}" {{ request('provider_id') == $id ? 'selected' : '' }}>
+                        {{ $name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group">
+                <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Buscar...">
+                <button class="btn btn-success" type="submit">Filtrar</button>
+                <a href="{{ route('items.index') }}" class="btn btn-secondary">Reset</a>
+            </div>
+        </div>
+    </div>
+</form>
 
-                    <div class="float-right">
-                       <div class="float-right">
-                            <form method="get">
-                                <div class="input-group">
-                                    <input type="text" name="search" value="{{ request()->get('search') }}" class="form-control"
-                                        placeholder="Search..." aria-label="Search" aria-describedby="button-addon2">
-                                    <button class="btn btn-success" type="submit" id="button-addon2">Search</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                  
 
                             <table class="table table-striped table-hover">
                                 <thead class="thead">
@@ -89,6 +110,7 @@
                         </div>
                     </div>
                 </div>
+                {!! $items->appends(request()->query())->links() !!}
                 {!! $items->links() !!}
             </div>
         </div>

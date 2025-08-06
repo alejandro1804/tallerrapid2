@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('states', function (Blueprint $table) {
-            $table->smallInteger('id')->autoIncrement()->unsigned()->primary();
+            $table->id();
             $table->string('name',25);
             $table->timestamps();
             $table->softDeletes();

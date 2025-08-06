@@ -12,19 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('parts', function (Blueprint $table) {
-            $table->mediumInteger('id')->autoIncrement()->unsigned()->primary();
+                $table->id(); // Esto crea unsignedBigInteger auto-incremental
 
-            $table->unsignedSmallInteger('item_id');
-            $table->foreign('item_id')->references('id')->on('items');
-            
-            $table->string('name',150);
-            $table->string('note');
+                $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
 
-            $table->unsignedSmallInteger('provider_id');
-            $table->foreign('provider_id')->references('id')->on('providers');
-            
-            $table->timestamps();
+                $table->string('name', 150);
+                $table->string('note');
+
+                $table->foreignId('provider_id')->constrained('providers')->onDelete('cascade');
+
+                $table->timestamps();
         });
+       
     }
 
     /**

@@ -48,7 +48,8 @@ class Ticket extends Model
      */
     public function binnacles()
     {
-        return $this->hasMany('App\Models\Binnacle', 'id', 'ticket_id');
+       // return $this->hasMany('App\Models\Binnacle', 'id', 'ticket_id');
+        return $this->hasMany('App\Models\Binnacle', 'ticket_id', 'id');
     }
 
     /**
@@ -75,7 +76,20 @@ class Ticket extends Model
     }
     public function author()
     {
-        return $this->users->firstWhere('pivot.role_in_ticket', 'autor');
+       // return $this->users->firstWhere('pivot.role_in_ticket', 'autor');
+
+
+       /* return $this->belongsToMany(User::class, 'ticket_user')
+                ->wherePivot('role_in_ticket', 'autor')
+                ->withPivot('role_in_ticket', 'assigned_at')
+                ->withTimestamps(); */
+        return $this->belongsToMany(User::class)
+        ->withPivot('role_in_ticket')
+        ->wherePivot('role_in_ticket', 'autor');
+
+        
+
+
     }
 
     public function toSearchableArray(): array

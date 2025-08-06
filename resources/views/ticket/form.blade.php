@@ -52,7 +52,6 @@
     @endif
 </div>
 
-
 <div class="form-group">
     <label for="priority">{{ __('Priority') }}</label>
     <select name="priority" id="priority" 

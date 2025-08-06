@@ -15,8 +15,11 @@
                                 {{ __('Binnacle ' . ' de ticket : ' . $ticket_id) }}
                             </span>
                             <div class="float-right">
-                                <a href="{{ route('binnacles.create', $ticket_id ) }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                <!--a href="{{ route('binnacles.create', $ticket_id ) }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
                                   {{ __('Create New') }}
+                                </a> -->
+                                <a href="{{ route('binnacles.create', ['ticket_id' => $ticket_id, 'user_id' => Auth::id()]) }}" class="btn btn-primary">
+                                    Crear nueva bitácora
                                 </a>
                             </div>
                         </div>
@@ -30,7 +33,7 @@
                     <div class="card-body">
                         <div class="table-responsive">
                         <form method="get">
-                            <div class="float-right">
+                            <div class="float-left">
                                 <input type="text" name="search" value="{{ request()->get('search')}}" class="form-control"
                                         plaaceholder="Search ...." aria-label="Search" aria-describedby="button-addon2">
                                 <button class="btn btn-success" type="submit" id="button-addon2">Search</button>       
@@ -64,7 +67,6 @@
 										    <td>
                                                 <form action="{{ route('binnacles.destroy',$binnacle->id) }}" method="POST">
                                                     <a class="btn btn-sm btn-primary " href="{{ route('binnacles.show',$binnacle->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Ver') }}</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('binnacles.edit',$binnacle->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
                                                     
 
                                                     @csrf

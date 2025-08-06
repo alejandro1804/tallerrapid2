@@ -23,7 +23,7 @@ class ItemController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    /*public function index()
     {
         $sectors = Sector::pluck('name', 'id');
         $providers = Provider::pluck('name', 'id');
@@ -32,7 +32,28 @@ class ItemController extends Controller
 
         return view('item.index', compact('items', 'sectors', 'providers'))
             ->with('i', (request()->input('page', 1) - 1) * $items->perPage());
-    }
+    }  */
+
+      public function index()
+    {
+        $sectors = Sector::pluck('name', 'id');
+        $providers = Provider::pluck('name', 'id');
+
+        $query = Item::search(request('search'));
+
+        if (request()->filled('sector_id')) {
+            $query->where('sector_id', request('sector_id'));
+        }
+
+        if (request()->filled('provider_id')) {
+            $query->where('provider_id', request('provider_id'));
+        }
+
+        $items = $query->orderBy('name', 'ASC')->paginate(6);
+
+        return view('item.index', compact('items', 'sectors', 'providers'))
+            ->with('i', (request()->input('page', 1) - 1) * $items->perPage());
+    }      
 
     /**
      * Show the form for creating a new resource.
@@ -43,8 +64,6 @@ class ItemController extends Controller
     {
         $providers = Provider::orderBy('name')->pluck('name', 'id');
         $sectors = Sector::orderBy('name')->pluck('name', 'id');
-
-
         $item = new Item;
 
         return view('item.create', compact('item', 'sectors', 'providers'));
@@ -55,81 +74,48 @@ class ItemController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    /*
+    
     public function store(Request $request)
     {
+        // Formateos y reemplazos
         $primera_en_mayuscula = ucfirst($request->input('name'));
         $request->merge(['name' => $primera_en_mayuscula]);
-        $trademark = $request->input('trademark');
-        $caracteristica = $request->input('characteristic');
-        $nota = $request->input('note');
 
-        if ($trademark == null) {
+        if ($request->filled('trademark') === false) {
             $request->merge(['trademark' => ' no suministrada ']);
         }
 
-        if ($caracteristica == null) {
+        if ($request->filled('characteristic') === false) {
             $request->merge(['characteristic' => ' sin comentarios ']);
         }
 
-        if ($nota == null) {
+        if ($request->filled('note') === false) {
             $request->merge(['note' => ' sin comentarios ']);
         }
 
         request()->validate(Item::$rules);
+        $request->validate(['name' => ['required', Rule::unique('items', 'name')],]);
 
-        $item = Item::create($request->all());
-
-         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('imagenes', 'public');
-            $item->image = $path;
+        // Cargar imagen si existe
+        $imagenPath = null;
+        if ($request->hasFile('image')) {
+            $imagenPath = $request->file('image')->store('imagenes', 'public');
         }
 
+        // Crear ítem con todos los campos
+        $item = Item::create([
+            'name' => $request->name,
+            'sector_id' => $request->sector_id,
+            'characteristic' => $request->characteristic,
+            'note' => $request->note,
+            'trademark' => $request->trademark,
+            'provider_id' => $request->provider_id,
+            'image' => $imagenPath,
+        ]);
+
         return redirect()->route('items.index')
-            ->with('success', 'Item created successfully.');
-    }   */
-
-    public function store(Request $request)
-{
-    // Formateos y reemplazos
-    $primera_en_mayuscula = ucfirst($request->input('name'));
-    $request->merge(['name' => $primera_en_mayuscula]);
-
-    if ($request->filled('trademark') === false) {
-        $request->merge(['trademark' => ' no suministrada ']);
+            ->with('success', 'Item creado exitosamente.');
     }
-
-    if ($request->filled('characteristic') === false) {
-        $request->merge(['characteristic' => ' sin comentarios ']);
-    }
-
-    if ($request->filled('note') === false) {
-        $request->merge(['note' => ' sin comentarios ']);
-    }
-
-    request()->validate(Item::$rules);
-    $request->validate(['name' => ['required', Rule::unique('items', 'name')],]);
-
-    // Cargar imagen si existe
-    $imagenPath = null;
-    if ($request->hasFile('image')) {
-        $imagenPath = $request->file('image')->store('imagenes', 'public');
-    }
-
-    // Crear ítem con todos los campos
-    $item = Item::create([
-        'name' => $request->name,
-        'sector_id' => $request->sector_id,
-        'characteristic' => $request->characteristic,
-        'note' => $request->note,
-        'trademark' => $request->trademark,
-        'provider_id' => $request->provider_id,
-        'image' => $imagenPath,
-    ]);
-
-    return redirect()->route('items.index')
-        ->with('success', 'Item creado exitosamente.');
-}
 
     /**
      * Display the specified resource.
@@ -174,7 +160,6 @@ class ItemController extends Controller
 
         $request->validate(['name' => ['required',Rule::unique('items')->ignore($item->id)],]);
 
-
         $item->update($request->all());
 
         return redirect()->route('items.index')
@@ -194,49 +179,7 @@ class ItemController extends Controller
         return redirect()->route('items.index')
             ->with('success', 'Item deleted successfully');
     }
-    /*
-    public function printItemQr($id)   // funcion para imprimir codigo QR
-    {
-
-       // ✅ Test rápido de acceso a la carpeta storage
-        //dd(File::exists(storage_path('app')));
-        // 🧠 Test para ver si Laravel accede a storage/app correctamente
-    //dd(\Illuminate\Support\Facades\File::exists(storage_path('app')));
-
-
-
-        $item = Item::findOrFail($id);
-
-        // 1. Crear contenido QR
-        $qrCode = Builder::create()
-            ->data("ID: {$item->id}\nNombre: {$item->name}\nMarca: {$item->trademark}")
-            ->size(200)
-            ->margin(10)
-            ->build();
-
-        $filename = 'qr_' . $item->id . '.png';
-        $filePath = storage_path('app/public/' . $filename);
-
-        // 🧪 Guardar imagen
-        File::put($filePath, $qrCode->getString());
-
-        // ✅ Verificar si el archivo existe
-        // dd(File::exists($filePath));
-
-        $qrImage = $qrCode->getDataUri();
-
-        // 2. Generar PDF con TCPDF
-        $pdf = new TCPDF();
-        $pdf->AddPage();
-        $pdf->SetFont('helvetica', '', 12);
-        $pdf->Write(0, "Nombre: {$item->name}");
-
-        // ✅ Mostrar el QR
-        $pdf->Image($filePath, 15, 30, 30, 30);  // X, Y, width, height
-
-        $pdf->Output("qr_item_{$item->id}.pdf", 'I'); // 'I' lo muestra en pantalla
-    }  */
-
+ 
     public function printItemQr($id)
     {
         $item = Item::findOrFail($id);

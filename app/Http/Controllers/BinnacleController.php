@@ -31,7 +31,7 @@ class BinnacleController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $binnacles->perPage());
     }
 
-    public function create()
+ /*   public function create()
     {
 
         $tickets = Ticket::pluck('id', 'id')->toArray();
@@ -41,7 +41,30 @@ class BinnacleController extends Controller
         $modo = 'CREAR';
 
         return view('binnacle.create', compact('binnacle', 'users', 'tickets', 'modo'));
-    }
+    }   */
+/*    public function create(Request $request)
+    {
+        $ticket_id = $request->input('ticket_id');
+        $user_id = $request->input('user_id');
+
+        $binnacle = new Binnacle;
+        $modo = 'CREAR';
+
+        return view('binnacle.create', compact('binnacle', 'ticket_id', 'user_id', 'modo'));
+    }  */
+
+    public function create(Request $request)
+{
+    $ticket_id = $request->input('ticket_id');
+    $user_id = $request->input('user_id');
+
+    $ticket = Ticket::with('item')->findOrFail($ticket_id); // Asegurate de tener la relación 'item'
+
+    $binnacle = new Binnacle;
+    $modo = 'CREAR';
+
+    return view('binnacle.create', compact('binnacle', 'ticket_id', 'user_id', 'ticket', 'modo'));
+}
 
     /**
      * Store a newly created resource in storage.

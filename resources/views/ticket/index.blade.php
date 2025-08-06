@@ -11,11 +11,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span id="card_title">
-                                {{ __(' <Tickets>  '). $cantidad . '   '. $finalizado}}
-                            </span>
-
-                             <div class="float-right">
+                            <div class="float-right">
                                 <a href="{{ route('tickets.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
                                   {{ __('Create New') }}
                                 </a>
@@ -30,48 +26,88 @@
                             <p>{{ $message }}</p>
                         </div>
                     @endif
-
                     <div class="card-body">
                         <div class="table-responsive">
-                            <form method="get" class="mb-3">
-                                <div class="form-group d-flex align-items-center">
-                                    <label class="mr-2">
-                                        <input type="checkbox" name="estado[]" value="NUEVO" {{ in_array('NUEVO', request()->get('estado', [])) ? 'checked' : '' }}>
-                                        NUEVO
-                                    </label>
-                                    <label class="mx-2">
-                                        <input type="checkbox" name="estado[]" value="EN EJECUCION" {{ in_array('EN EJECUCION', request()->get('estado', [])) ? 'checked' : '' }}>
-                                        EN EJECUCION
-                                    </label>
-                                    <label class="mx-2">
-                                        <input type="checkbox" name="estado[]" value="EN ESPERA" {{ in_array('EN ESPERA', request()->get('estado', [])) ? 'checked' : '' }}>
-                                        EN ESPERA
-                                    </label>
-                                    <label class="mx-2">
-                                        <input type="checkbox" name="estado[]" value="CERRADO" {{ in_array('CERRADO', request()->get('estado', [])) ? 'checked' : '' }}>
-                                        CERRADO
-                                    </label>
-                                    <label class="mx-2">Desde:
-                                        <input type="date" name="fecha_inicio" value="{{ request('fecha_inicio') }}">
-                                    </label>
-                                    <label class="mx-2">Hasta:
-                                        <input type="date" name="fecha_fin" value="{{ request('fecha_fin') }}">
-                                    </label>
-                                    <button class="btn btn-primary ml-3" type="submit">Filtrar</button>
-                                </div>
-                            </form>
-                        </div>
+                              <form method="get" class="mb-3">
+    <div class="row align-items-center">
+        <!-- Estados -->
+        <div class="col-md-6 d-flex flex-wrap">
+            <label class="mr-2">
+                <input type="checkbox" name="estado[]" value="NUEVO" {{ in_array('NUEVO', request()->get('estado', [])) ? 'checked' : '' }}>
+                NUEVO
+            </label>
+            <label class="mx-2">
+                <input type="checkbox" name="estado[]" value="EN EJECUCION" {{ in_array('EN EJECUCION', request()->get('estado', [])) ? 'checked' : '' }}>
+                EN EJECUCION
+            </label>
+            <label class="mx-2">
+                <input type="checkbox" name="estado[]" value="EN ESPERA" {{ in_array('EN ESPERA', request()->get('estado', [])) ? 'checked' : '' }}>
+                EN ESPERA
+            </label>
+            <label class="mx-2">
+                <input type="checkbox" name="estado[]" value="CERRADO" {{ in_array('CERRADO', request()->get('estado', [])) ? 'checked' : '' }}>
+                CERRADO
+            </label>
+        </div>
+
+        <!-- Fechas -->
+        <div class="col-md-3 d-flex">
+            <label class="mr-2">Desde:
+                <input type="date" name="fecha_inicio" value="{{ request('fecha_inicio') }}" class="form-control">
+            </label>
+            <label class="ml-2">Hasta:
+                <input type="date" name="fecha_fin" value="{{ request('fecha_fin') }}" class="form-control">
+            </label>
+        </div>
+        <!-- Autor -->
+        <div class="col-md-3">
+            <select name="author_id" class="form-control">
+                <option value="">-- Filtrar por Autor --</option>
+                @foreach($authors as $id => $name)
+                    <option value="{{ $id }}" {{ request('author_id') == $id ? 'selected' : '' }}>
+                        {{ $name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Item -->
+        <div class="col-md-3">
+            <select name="item_id" class="form-control">
+                <option value="">-- Filtrar por Item --</option>
+                @foreach($items as $id => $name)
+                    <option value="{{ $id }}" {{ request('item_id') == $id ? 'selected' : '' }}>
+                        {{ $name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Prioridad -->
+        <div class="col-md-2">
+            <select name="priority" class="form-control">
+                <option value="">-- Prioridad --</option>
+                @foreach($priorityMap as $priority)
+                    <option value="{{ $priority }}" {{ request('priority') == $priority ? 'selected' : '' }}>
+                        {{ $priority }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+
+
+        <!-- Búsqueda -->
+        <div class="col-md-3 d-flex">
+            <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Buscar...">
+            <button class="btn btn-success mx-2" type="submit">Filtrar</button>
+            <a href="{{ route('tickets.index') }}" class="btn btn-secondary">Reset</a>
+        </div>
+    </div>
+</form> 
+                         </div>
                          
-                        <div class="float-right">
-                            <form method="get">
-                                <div class="input-group">
-                                    <input type="text" name="search" value="{{ request()->get('search') }}" class="form-control"
-                                        placeholder="Search..." aria-label="Search" aria-describedby="button-addon2">
-                                    <button class="btn btn-success" type="submit" id="button-addon2">Search</button>
-                                </div>
-                            </form>
-                        </div>
-                           
+                        
                             <table class="table table-striped table-hover">
                                 <thead class="thead">
                                     <tr>
@@ -81,6 +117,7 @@
 										<th>Item </th>
 										<th>Priority</th>
                                         <th>Author</th>
+                                        <th>Binnacles</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -97,8 +134,18 @@
 											<td>{{ $ticket->state->name }}</td>
 											<td>{{ $ticket->admission }}</td>
 											<td>{{ $ticket->item->name }}</td>
-                                         	<td>{{ $ticket->priority }}</td>
-                                            <td>{{ $ticket->author()?->name ?? 'Sin autor' }}</td>
+                                            @php
+                                                $priorityLabels = [1 => 'Alta', 2 => 'Media', 3 => 'Baja'];
+                                            @endphp
+                                            <td>{{ $priorityLabels[$ticket->priority] ?? 'Sin prioridad' }}</td>
+                                            @php
+                                                $autor = $ticket->users->firstWhere('pivot.role_in_ticket', 'autor');
+                                            @endphp
+
+                                            <td>{{ $autor ? $autor->name : 'Sin autor' }}</td>
+                                            
+                                            <td>{{ $ticket->binnacles->count() }} bitácoras</td>
+                                            
 
                                             <td>
                                                 <form action="{{ route('tickets.destroy',$ticket->id) }}" method="POST">

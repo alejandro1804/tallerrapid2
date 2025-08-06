@@ -63,8 +63,8 @@
                                             <td>{{ $user->name }}</td>
 											<td>{{ $user->email  }}</td>
                                             <td>{{ $user->phone  }}</td>
-											<td>{{ $user->position->name }}</td>
-                                            <td>{{ $user->role->name }}</td>
+											<td>{{ optional($user->position)->name ?? 'Sin posición' }}</td>
+                                            <td>{{ optional($user->role)->name ?? 'Sin posición' }}</td>
                                             <td>
                                                 <form action="{{ route('users.destroy',$user->id) }}" method="POST">
                                                     <a class="btn btn-sm btn-primary " href="{{ route('users.show',$user->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>

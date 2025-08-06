@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\State;
 use App\Models\Ticket;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -20,7 +21,7 @@ class TicketController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+/*    public function index(Request $request)
     {
         $search = $request->get('search');
         $estados = $request->get('estado', []); // Checkboxes seleccionados
@@ -59,7 +60,186 @@ class TicketController extends Controller
 
         return view('ticket.index', compact('states', 'tickets', 'items', 'cantidad', 'finalizado'))
             ->with('i', (request()->input('page', 1) - 1) * $tickets->perPage());
+
+            //$query = Ticket::with(['state', 'item', 'binnacles'])->orderBy('id', 'DESC');
+    } */
+
+ /*  public function index(Request $request)
+{
+    $search = $request->get('search');
+    $estados = $request->get('estado', []);
+    $fechaInicio = $request->get('fecha_inicio');
+    $fechaFin = $request->get('fecha_fin');
+
+    $states = State::pluck('name', 'id');
+    $items = Item::pluck('name', 'id');
+
+    // Construcción dinámica de la query
+    $query = Ticket::query()
+        ->with(['state', 'item'])
+        ->withCount('binnacles')
+        ->orderBy('id', 'DESC');
+
+    if ($search) {
+        $query->where('id', 'like', '%'.$search.'%');
     }
+
+    if (!empty($estados)) {
+        $query->whereHas('state', function ($q) use ($estados) {
+            $q->whereIn('name', $estados);
+        });
+    }
+
+    if ($fechaInicio && $fechaFin) {
+        $query->whereBetween('admission', [$fechaInicio, $fechaFin]);
+    } elseif ($fechaInicio) {
+        $query->whereDate('admission', '>=', $fechaInicio);
+    } elseif ($fechaFin) {
+        $query->whereDate('admission', '<=', $fechaFin);
+    }
+
+    // ✅ Esta línea debería funcionar correctamente
+    $tickets = $query->paginate(6);
+
+    $cantidad = 'Total emitidos   ' . Ticket::count() . '______   ';
+    $finalizado = 'Total finalizados    ' . Ticket::where('state_id', 2)->count() . '    ';
+
+    return view('ticket.index', compact('states', 'tickets', 'items', 'cantidad', 'finalizado'))
+        ->with('i', (request()->input('page', 1) - 1) * $tickets->perPage());
+}   */
+
+/*
+public function index(Request $request)
+{
+    $query = Ticket::query();
+
+    // Filtros existentes
+    if ($request->filled('search')) {
+        $query->where('description', 'like', '%' . $request->search . '%');
+    }
+
+    if ($request->filled('estado')) {
+        $query->whereIn('state_id', $request->estado); // Ajustar si usás nombres en vez de IDs
+    }
+
+    if ($request->filled('fecha_inicio')) {
+        $query->whereDate('admission', '>=', $request->fecha_inicio);
+    }
+
+    if ($request->filled('fecha_fin')) {
+        $query->whereDate('admission', '<=', $request->fecha_fin);
+    }
+
+    // Nuevos filtros
+        // 🔍 Filtro por autor (many-to-many)
+    if ($request->filled('author_id')) {
+        $query->whereHas('users', function ($q) use ($request) {
+            $q->where('users.id', $request->author_id)
+              ->where('ticket_user.role_in_ticket', 'autor');
+        });
+    }
+
+
+
+    if ($request->filled('item_id')) {
+        $query->where('item_id', $request->item_id);
+    }
+
+    if ($request->filled('priority')) {
+        $query->where('priority', $request->priority);
+    }
+
+    $tickets = $query->with(['author', 'item', 'state'])->paginate(10);
+
+    // Contadores
+ /*   $cantidad = $query->count(); // Total filtrado
+    $finalizado = $query->whereHas('state', function ($q) {
+        $q->where('name', 'Finalizado'); // Ajustá si usás otro campo
+    })->count();  */
+/*
+
+
+    $authors = User::pluck('name', 'id');
+    $items = Item::pluck('name', 'id');
+    $priorities = ['Alta', 'Media', 'Baja'];
+
+    return view('ticket.index', compact('tickets', 'authors', 'items', 'priorities'))
+        ->with('i', (request()->input('page', 1) - 1) * $tickets->perPage());
+} */
+    public function index(Request $request)
+{
+    $query = Ticket::query();
+
+    // 🔍 Filtro por texto libre
+    if ($request->filled('search')) {
+        $query->where('flaw', 'like', '%' . $request->search . '%');
+    }
+
+    // 📅 Filtro por fechas
+    if ($request->filled('fecha_inicio')) {
+        $query->whereDate('admission', '>=', $request->fecha_inicio);
+    }
+
+    if ($request->filled('fecha_fin')) {
+        $query->whereDate('admission', '<=', $request->fecha_fin);
+    }
+
+    // 📌 Filtro por estado (por nombre, no ID)
+    if ($request->filled('estado')) {
+        $query->whereHas('state', function ($q) use ($request) {
+            $q->whereIn('name', $request->estado);
+        });
+    }
+
+    // 👤 Filtro por autor (many-to-many con pivot)
+    if ($request->filled('author_id')) {
+        $query->whereHas('users', function ($q) use ($request) {
+            $q->where('users.id', $request->author_id)
+              ->where('ticket_user.role_in_ticket', 'autor');
+        });
+    }
+
+    // ⚙️ Filtro por item
+    if ($request->filled('item_id')) {
+        $query->where('item_id', $request->item_id);
+    }
+
+    // 🔥 Filtro por prioridad
+    $priorityMap = [    'Alta' => 1,    'Media' => 2,    'Baja' => 3];
+
+    if ($request->filled('priority') && isset($priorityMap[$request->priority])) {
+    $query->where('priority', $priorityMap[$request->priority]);
+    }
+    /*
+    if ($request->filled('priority')) {
+        $query->where('priority', $request->priority);
+    } */
+
+    // 📦 Cargar relaciones necesarias
+    $filteredQuery = clone $query;
+
+    $tickets = $query->with(['users', 'item', 'state', 'binnacles'])->paginate(10);
+
+    // 📊 Contadores
+    $cantidad = $filteredQuery->count();
+
+    $finalizado = (clone $filteredQuery)->whereHas('state', function ($q) {
+        $q->where('name', 'CERRADO');
+    })->count();
+
+    // 📋 Datos para los selects
+    $authors = User::whereHas('tickets', function ($q) {
+        $q->where('ticket_user.role_in_ticket', 'autor');
+    })->pluck('name', 'id');
+
+    $items = Item::pluck('name', 'id');
+    //$priorities = ['Alta', 'Media', 'Baja'];
+
+    return view('ticket.index', compact(
+        'tickets', 'authors', 'items', 'priorityMap', 'cantidad', 'finalizado'
+    ))->with('i', (request()->input('page', 1) - 1) * $tickets->perPage());
+}
+
 
     /**
      * Show the form for creating a new resource.

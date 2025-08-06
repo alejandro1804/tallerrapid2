@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sectors', function (Blueprint $table) {
-            $table->smallInteger('id')->autoIncrement()->unsigned()->primary();
+            $table->id();
+            //$table->smallInteger('id')->autoIncrement()->unsigned()->primary();
             $table->string('name',100);
             $table->timestamps();
             $table->softDeletes();

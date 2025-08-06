@@ -12,19 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('items', function (Blueprint $table) {
-            $table->smallInteger('id')->autoIncrement()->unsigned()->primary();
+            $table->id();
+           // $table->smallInteger('id')->autoIncrement()->unsigned()->primary();
             $table->string('name');
 
-            $table->unsignedSmallInteger('sector_id');
-            $table->foreign('sector_id')->references('id')->on('sectors');
+           // $table->unsignedSmallInteger('sector_id');
+           //$table->foreign('sector_id')->references('id')->on('sectors');
+            $table->foreignId('sector_id')->constrained('sectors');
             
             $table->string('characteristic');
             $table->string('note');
             $table->string('trademark',40);
             
-            $table->unsignedSmallInteger('provider_id');
-            $table->foreign('provider_id')->references('id')->on('providers');
-
+            $table->foreignId('provider_id')->constrained('providers')->onDelete('cascade');
+           
             $table->string('image')->nullable();
 
             $table->timestamps();
