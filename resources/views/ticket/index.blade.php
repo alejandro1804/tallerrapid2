@@ -10,15 +10,13 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div class="float-right">
-                                <a href="{{ route('tickets.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
-                                  {{ __('Create New') }}
-                                </a>
-                                <a href="{{ route('tickets.export.pdf', request()->query()) }}" class="btn btn-danger btn-sm mx-2">
-                                    <i class="fa fa-file-pdf-o"></i> {{ __('Exportar PDF filtrado') }}
-                                </a>
-                              </div>
+                        <div style="display: flex; justify-content: flex-end; align-items: center;">
+                            <a href="{{ route('tickets.create') }}" class="btn btn-primary btn-sm me-2">
+                                {{ __('Create New') }}
+                            </a>
+                            <a href="{{ route('tickets.export.pdf', request()->query()) }}" class="btn btn-danger btn-sm">
+                                <i class="fa fa-file-pdf-o"></i> {{ __('Exportar PDF filtrado') }}
+                            </a>
                         </div>
                     </div>
                     @if ($message = Session::get('success'))
@@ -31,7 +29,7 @@
                               <form method="get" class="mb-3">
     <div class="row align-items-center">
         <!-- Estados -->
-        <div class="col-md-6 d-flex flex-wrap">
+        <div class="col-md-10 d-flex flex-wrap">
             <label class="mr-2">
                 <input type="checkbox" name="estado[]" value="NUEVO" {{ in_array('NUEVO', request()->get('estado', [])) ? 'checked' : '' }}>
                 NUEVO
@@ -51,16 +49,18 @@
         </div>
 
         <!-- Fechas -->
-        <div class="col-md-3 d-flex">
-            <label class="mr-2">Desde:
+        <div class="col-md-4 d-flex align-items-center">
+            <div class="me-2 d-flex align-items-center">
+                <span class="me-2">Desde:</span>
                 <input type="date" name="fecha_inicio" value="{{ request('fecha_inicio') }}" class="form-control">
-            </label>
-            <label class="ml-2">Hasta:
+            </div>
+            <div class="ms-2 d-flex align-items-center">
+                <span class="me-2">Hasta:</span>
                 <input type="date" name="fecha_fin" value="{{ request('fecha_fin') }}" class="form-control">
-            </label>
+            </div>
         </div>
         <!-- Autor -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <select name="author_id" class="form-control">
                 <option value="">-- Filtrar por Autor --</option>
                 @foreach($authors as $id => $name)
@@ -72,7 +72,7 @@
         </div>
 
         <!-- Item -->
-        <div class="col-md-3">
+        <div class="col-md-2">
             <select name="item_id" class="form-control">
                 <option value="">-- Filtrar por Item --</option>
                 @foreach($items as $id => $name)
@@ -84,9 +84,9 @@
         </div>
 
         <!-- Prioridad -->
-        <div class="col-md-2">
+        <div class="col-md-1">
             <select name="priority" class="form-control">
-                <option value="">-- Prioridad --</option>
+                <option value="">Prioridad</option>
                 @foreach($priorityMap as $priority)
                     <option value="{{ $priority }}" {{ request('priority') == $priority ? 'selected' : '' }}>
                         {{ $priority }}

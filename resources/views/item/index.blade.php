@@ -30,7 +30,7 @@
                     @endif
   <form method="get" class="mb-3">
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <select name="sector_id" class="form-control">
                 <option value="">-- Filtrar por Sector --</option>
                 @foreach($sectors as $id => $name)
@@ -40,7 +40,7 @@
                 @endforeach
             </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <select name="provider_id" class="form-control">
                 <option value="">-- Filtrar por Proveedor --</option>
                 @foreach($providers as $id => $name)
@@ -50,13 +50,11 @@
                 @endforeach
             </select>
         </div>
-        <div class="col-md-4">
-            <div class="input-group">
-                <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Buscar...">
-                <button class="btn btn-success" type="submit">Filtrar</button>
-                <a href="{{ route('items.index') }}" class="btn btn-secondary">Reset</a>
-            </div>
+        <div class="col-md-4 d-flex align-items-end gap-2">
+            <button class="btn btn-success w-100" type="submit">Filtrar</button>
+            <a href="{{ route('items.index') }}" class="btn btn-secondary w-100">Reset</a>
         </div>
+        
     </div>
 </form>
 

@@ -13,7 +13,11 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
                             <span id="card_title">
-                                {{ __('Part') }}
+                                @if(isset($item))
+                                    <h5 class="mt-3">Partes asociadas al ítem: <strong>{{ $item->name }}</strong></h5>
+                                @else
+                                    <h5 class="mt-3">Listado general de partes</h5>
+                                @endif
                             </span>
 
                              <div class="float-right">
@@ -28,25 +32,52 @@
                             <p>{{ $message }}</p>
                         </div>
                     @endif
+                    @php
+                        $i = $i ?? 0;
+                        $item_id = $item_id ?? null;
+                    @endphp
 
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <div class="float-right">
-    <form method="get">
-        <div class="input-group">
-            <input type="text" name="search" value="{{ request()->get('search') }}" class="form-control"
-                placeholder="Search..." aria-label="Search" aria-describedby="button-addon2">
-            <button class="btn btn-success" type="submit" id="button-addon2">Search</button>
-        </div>
-    </form>
-</div>
+                    @if($items && $providers)
 
+                    <form method="GET" action="{{ route('parts.index') }}">
 
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <div class="row mb-3">
+                            <div class="col-md-4">
+                                <select name="item_id" class="form-select">
+                                    @foreach($items as $id => $name)
+                                        <option value="{{ $id }}" {{ $id == $item_id ? 'selected' : '' }}>
+                                            {{ $name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select name="provider_id" class="form-select">
+                                    <option value="">-- Filtrar por Proveedor --</option>
+                                    @foreach($providers as $provider)
+                                        <option value="{{ $provider->id }}" {{ request('provider_id') == $provider->id ? 'selected' : '' }}>
+                                            {{ $provider->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end gap-2">
+                                <button class="btn btn-success w-100" type="submit">Filtrar</button>
+                                <a href="{{ route('parts.index') }}" class="btn btn-secondary w-100">Reset</a>
+                            </div>
+                        </div>
+                    </form>
+                    @endif    
                             <table class="table table-striped table-hover">
                                 <thead class="thead">
                                     <tr>
                                      	<th>Nro Equipo </th>
+                                        @if(!isset($item))
+
                                         <th>Equipo o Maquina </th>
+                                        @endif
 										<th>Parte</th>
 										<th>Provider </th>
                                         <th></th>
@@ -63,7 +94,10 @@
                                             @endphp
                                         <tr>
                                         	<td>{{ $part->item_id }}</td>
-                                            <td>{{ $part->item->name }}</td>
+                                            @if(!isset($item))
+
+                                                <td>{{ $part->item->name }}</td>
+                                            @endif    
 											<td>{{ $part->name }}</td>
 											<td>{{ $part->provider->name ?? 'Sin proveedor'}}</td>
 

@@ -18,7 +18,7 @@ class PartController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+ /*   public function index()
     {
 
         $items = Item::orderBy('name', 'ASC')->pluck('name', 'id');
@@ -32,13 +32,63 @@ class PartController extends Controller
 
         return view('part.index', compact('parts', 'items'))
             ->with('i', (request()->input('page', 1) - 1) * $parts->perPage());
+    }  */
+
+    public function index()
+{
+    $search = request('search');
+    $itemFilter = request('item_id');
+    $providerFilter = request('provider_id');
+
+    $query = Part::query();
+
+    // 🔍 Búsqueda por texto o número
+    if (is_numeric($search)) {
+        $query->search($search)->where('item_id', $search);
+    } elseif ($search) {
+        $query->search($search);
     }
+
+    // 🧩 Filtro por ítem
+    if ($itemFilter) {
+        $query->where('item_id', $itemFilter);
+    }
+
+    // 🧩 Filtro por proveedor
+    if ($providerFilter) {
+        $query->where('provider_id', $providerFilter);
+    }
+
+    $parts = $query->orderBy('name', 'ASC')->paginate(7)->appends([
+        'search' => $search,
+        'item_id' => $itemFilter,
+        'provider_id' => $providerFilter,
+    ]);
+
+
+    // Para los select dropdowns
+    $items = Item::orderBy('name', 'ASC')->get();
+    $providers = Provider::orderBy('name', 'ASC')->get();
+
+    return view('part.index', compact('parts', 'items', 'providers'))
+        ->with('i', (request()->input('page', 1) - 1) * $parts->perPage());
+}
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
+/*    public function create()
+    {
+        $items = Item::orderBy('name')->pluck('name', 'id');
+        $providers = Provider::orderBy('name')->pluck('name', 'id');
+        $part = new Part;
+
+        //return view('part.create', compact('part', 'providers', 'items'));
+        return view('part.index', compact('parts', 'items', 'providers', 'search', 'itemFilter', 'providerFilter'));
+    } */
+   /*
     public function create()
     {
         $items = Item::orderBy('name')->pluck('name', 'id');
@@ -46,7 +96,19 @@ class PartController extends Controller
         $part = new Part;
 
         return view('part.create', compact('part', 'providers', 'items'));
-    }
+    }  */
+    public function create(Request $request)
+{
+    $items = Item::orderBy('name')->pluck('name', 'id');
+    $providers = Provider::orderBy('name')->pluck('name', 'id');
+    $part = new Part;
+    $item_id = $request->input('item_id');
+
+    return view('part.create', compact('part', 'providers', 'items', 'item_id'));
+}
+
+    
+    
 
     /**
      * Store a newly created resource in storage.
@@ -133,8 +195,20 @@ class PartController extends Controller
     {
         $parts = $item->parts()->paginate(10);
 
-        return view('part.index', compact('parts', 'item'))
-            ->with('i', (request()->input('page', 1) - 1) * $parts->perPage());
+      //  return view('part.index', compact('parts', 'item'))
+       //     ->with('i', (request()->input('page', 1) - 1) * $parts->perPage());
+       return view('part.index', [
+        'parts' => $parts,
+        'item' => $item,
+        'items' => null,
+        'providers' => null,
+        'search' => null,
+        'itemFilter' => null,
+        'providerFilter' => null,
+        'item_id' => $item->id,
+            'i' => (request()->input('page', 1) - 1) * $parts->perPage()
+        ]);
+
     }
 
 }
