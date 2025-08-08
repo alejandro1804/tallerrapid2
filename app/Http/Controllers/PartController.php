@@ -67,7 +67,8 @@ class PartController extends Controller
 
 
     // Para los select dropdowns
-    $items = Item::orderBy('name', 'ASC')->get();
+   // $items = Item::orderBy('name', 'ASC')->get();
+    $items = Item::orderBy('name', 'ASC')->pluck('name', 'id');
     $providers = Provider::orderBy('name', 'ASC')->get();
 
     return view('part.index', compact('parts', 'items', 'providers'))

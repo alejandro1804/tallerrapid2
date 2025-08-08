@@ -10,7 +10,10 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <div style="display: flex; justify-content: flex-end; align-items: center;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span id="card_title">
+                                <h5 class="mt-3"> {{ __('Listado General de tickets') }}</h5>
+                            </span>
                             <a href="{{ route('tickets.create') }}" class="btn btn-primary btn-sm me-2">
                                 {{ __('Create New') }}
                             </a>

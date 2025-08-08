@@ -10,17 +10,16 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; position: relative;">
+                            <div style="flex: 1;">
+                                <h5>{{ __('State') }}</h5>
+                            </div>
 
-                            <span id="card_title">
-                                {{ __('State') }}
-                            </span>
-
-                             <div class="float-right">
-                                <a href="{{ route('states.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
-                                  {{ __('Create New') }}
+                            <div style="position: absolute; left: 50%; transform: translateX(-50%);">
+                                <a href="{{ route('states.create') }}" class="btn btn-primary btn-sm" data-placement="left">
+                                    {{ __('Create New') }}
                                 </a>
-                              </div>
+                            </div>
                         </div>
                     </div>
                     @if ($message = Session::get('success'))
