@@ -195,12 +195,14 @@ class PartController extends Controller
     public function indexpart(Item $item)
     {
         $parts = $item->parts()->paginate(10);
+        $itemName= $item->name;    
 
       //  return view('part.index', compact('parts', 'item'))
        //     ->with('i', (request()->input('page', 1) - 1) * $parts->perPage());
        return view('part.index', [
         'parts' => $parts,
         'item' => $item,
+        'itemName' => $itemName, // 👈 acá lo agregás
         'items' => null,
         'providers' => null,
         'search' => null,

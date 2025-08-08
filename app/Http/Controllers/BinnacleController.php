@@ -24,10 +24,14 @@ class BinnacleController extends Controller
         $ticket_id = request('id'); // Obtiene el id del ticket
 
         $tickets = Ticket::with('item')->findOrFail($ticket_id);
+
+        $itemName = $tickets->item->name ?? '[Ítem no asignado]'; // 👈 Extrae el nombre del ítem
+
+
         $users = User::pluck('name', 'id');
         $binnacles = Binnacle::where('ticket_id', $ticket_id)->paginate(6);
 
-        return view('binnacle.index', compact('binnacles', 'tickets', 'users', 'ticket_id'))
+        return view('binnacle.index', compact('binnacles', 'tickets', 'users', 'ticket_id','itemName'))
             ->with('i', (request()->input('page', 1) - 1) * $binnacles->perPage());
     }
 

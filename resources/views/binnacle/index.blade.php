@@ -12,7 +12,7 @@
                     <div class="card-header">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <span id="card_title">
-                                {{ __('Binnacle ' . ' de ticket : ' . $ticket_id) }}
+                                 <F5> {{ __('Binnacle de ticket: ') . $ticket_id . ' — ' . $itemName }} </F5>
                             </span>
                             <div class="float-right">
                                 <!--a href="{{ route('binnacles.create', $ticket_id ) }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
@@ -43,10 +43,9 @@
                             <table class="table table-striped table-hover">
                                 <thead class="thead">
                                     <tr>
-                                    	<th>Ticket </th>
-                                        <th>Maquina o Equipo </th>
-										<th>User</th>
+                                        <th>User</th>
                                         <th>Fecha y hora </th>
+                                        <th>Nota </th>
 									</tr>
                                 </thead>
                                 <tbody>
@@ -60,14 +59,12 @@
                                                  ++$i;  
                                             @endphp
                                         <tr>
-                                    		<td>{{ $binnacle->ticket_id }}</td>
-                                            <td>{{ $binnacle->ticket->item->name}}</td>
-											<td>{{ $binnacle->user->name }}</td>
+                                    		<td>{{ $binnacle->user->name }}</td>
                                             <td>{{ $binnacle->created_at }}</td>
+                                            <td>{{ $binnacle->note }}</td>
 										    <td>
                                                 <form action="{{ route('binnacles.destroy',$binnacle->id) }}" method="POST">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('binnacles.show',$binnacle->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Ver') }}</a>
-                                                    
+                                                                                       
 
                                                     @csrf
                                                     @method('DELETE')

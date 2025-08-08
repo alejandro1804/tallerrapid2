@@ -13,7 +13,8 @@
                         <div style="display: flex; align-items: center; position: relative;">
                         <div style="flex: 1;">
                             @if(isset($item))
-                                <h5 class="mt-3">{{ __('Partes asociadas al item : ') }}<strong>{{ $item->name }}</strong></h5>
+                                <h5 class="mt-3">{{ __('Partes asociadas al item : ') }}<strong>{{$item->id . ' ' .
+                                                                                         $item->name }}</strong></h5>
                             @else
                                 <h5 class="mt-3">{{ __('Listado general de partes') }}</h5>
                             @endif
@@ -45,6 +46,7 @@
                                 <div class="row mb-3">
                             <div class="col-md-4">
                                 <select name="item_id" class="form-select">
+                                    <option value="">-- Filtrar por Equipo --</option>
                                     @foreach($items as $id => $name)
                                         <option value="{{ $id }}" {{ $id == $item_id ? 'selected' : '' }}>
                                             {{ $name }}
@@ -72,10 +74,9 @@
                             <table class="table table-striped table-hover">
                                 <thead class="thead">
                                     <tr>
-                                     	<th>Nro Equipo </th>
                                         @if(!isset($item))
-
-                                        <th>Equipo o Maquina </th>
+                                     	    <th>Nro Equipo </th>
+                                            <th>Equipo o Maquina </th>
                                         @endif
 										<th>Parte</th>
 										<th>Provider </th>
@@ -92,9 +93,9 @@
                                                  ++$i;  
                                             @endphp
                                         <tr>
-                                        	<td>{{ $part->item_id }}</td>
+                                        	
                                             @if(!isset($item))
-
+                                                <td>{{ $part->item_id }}</td>
                                                 <td>{{ $part->item->name }}</td>
                                             @endif    
 											<td>{{ $part->name }}</td>
