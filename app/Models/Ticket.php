@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
+use App\Models\State;
 
 /**
  * Class Ticket
@@ -57,16 +58,22 @@ class Ticket extends Model
      */
     public function item()
     {
-        return $this->hasOne('App\Models\Item', 'id', 'item_id');
+       // return $this->hasOne('App\Models\Item', 'id', 'item_id');
+        return $this->belongsTo(Item::class);
+
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function state()
+  /*  public function state()
     {
         return $this->hasOne('App\Models\State', 'id', 'state_id');
-    }
+    }  */
+    public function state()
+{
+    return $this->belongsTo(State::class);
+}
 
     public function users()
     {
@@ -105,5 +112,10 @@ class Ticket extends Model
         ];
 
         return $array;
+    }
+
+    public function scopeEstado($query, $nombre)
+    {
+        return $query->whereHas('state', fn($q) => $q->where('name', $nombre));
     }
 }

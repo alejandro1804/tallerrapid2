@@ -12,7 +12,8 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-</head>
+    
+ </head>
 <body>
     <div id="app">
        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm sticky-top">
@@ -95,6 +96,7 @@
             @yield('content')
         </main>
     </div>
+   
 </body>
 </html>
                     

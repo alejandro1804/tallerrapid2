@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Searchable;
+use App\Models\State;
 
 class User extends Authenticatable
 {
@@ -74,6 +75,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Ticket::class, 'ticket_user')
                     ->withPivot('role_in_ticket', 'assigned_at')
                     ->withTimestamps();
+    }
+    public function state()
+    {
+        return $this->belongsTo(State::class);
     }
 
     public function canAccessModule($module)

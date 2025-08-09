@@ -13,14 +13,10 @@ return new class extends Migration
     {
         Schema::create('parts', function (Blueprint $table) {
                 $table->id(); // Esto crea unsignedBigInteger auto-incremental
-
                 $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
-
                 $table->string('name', 150);
                 $table->string('note');
-
                 $table->foreignId('provider_id')->constrained('providers')->onDelete('cascade');
-
                 $table->timestamps();
         });
        

@@ -11,18 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-    /*    Schema::create('binnacles', function (Blueprint $table) {
-            $table->mediumInteger('id')->autoIncrement()->unsigned()->primary();
-
-            $table->unsignedMediumInteger('ticket_id');   
-            $table->foreign('ticket_id')->references('id')->on('tickets');
-
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            
-            $table->string('note');
-            $table->timestamps();
-        });  */
+   
         Schema::create('binnacles', function (Blueprint $table) {
             $table->bigIncrements('id'); // Reemplaza mediumInteger por bigIncrements
 

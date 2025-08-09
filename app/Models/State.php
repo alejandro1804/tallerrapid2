@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use App\Models\Ticket;
 
 
 /**
@@ -33,4 +33,11 @@ class State extends Model
      * @var array
      */
     protected $fillable = ['name'];
+
+
+
+    public function tickets()
+{
+    return $this->hasMany(Ticket::class);
+}
 }

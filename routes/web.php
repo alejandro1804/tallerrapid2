@@ -10,8 +10,10 @@ use App\Http\Controllers\SectorController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
+use App\Livewire\DashboardKanban;
 
 use Illuminate\Support\Facades\Route;
+
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -46,3 +48,10 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/tickets/export/pdf', [TicketController::class, 'exportTicketsPDF'])->name('tickets.export.pdf');
 Route::get('item/{id}/qr', [ItemController::class, 'printItemQr'])->name('items.qr');
 Route::get('/items/{item}/parts', [PartController::class, 'indexpart'])->name('items.parts');
+
+Route::get('/dashboard-kanban', DashboardKanban::class)
+    ->middleware(['auth']) // si usás autenticación
+    ->name('dashboard.kanban');
+
+
+

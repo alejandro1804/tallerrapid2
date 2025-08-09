@@ -11,33 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-     /*   Schema::create('tickets', function (Blueprint $table) {
-            $table->mediumInteger('id')->autoIncrement()->unsigned()->primary();
-
-            $table->unsignedSmallInteger('state_id');
-            $table->foreign('state_id')->references('id')->on('states');
-
-            $table->timestamp('admission');
-
-            $table->unsignedSmallInteger('item_id');  
-            $table->foreign('item_id')->references('id')->on('items');
-            
-            $table->string('flaw');
-            $table->integer('priority');
-            $table->timestamps();
-        });   */
-
-       
+          
        Schema::create('tickets', function (Blueprint $table) {
             $table->id(); // Usa unsignedBigInteger por defecto
-
             $table->foreignId('state_id')->constrained('states'); // Clave foránea optimizada
-
             $table->timestamp('admission');
-
             $table->foreignId('item_id')->constrained('items'); // Clave foránea optimizada
-           // $table->foreignId('item_id')->constrained('items');
-
             $table->string('flaw');
             $table->integer('priority');
             $table->timestamps();
