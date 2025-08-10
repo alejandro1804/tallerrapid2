@@ -2,49 +2,63 @@
 
 @section('content'){{-- resources/views/livewire/dashboard-kanban.blade.php --}}
 
-    <div class="py-6 px-4">
-        <h2 class="text-xl font-semibold mb-4">Tablero Kanban</h2>
+<div class="py-4 px-3">
+    <h3 class="fs-4 fw-semibold mb-4 text-center">Tablero Kanban</h3>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            @foreach(['nuevo', 'ejecucion', 'espera'] as $estado)
-                <div class="bg-gray-100 p-4 rounded shadow min-h-[300px]"
-                        ondrop="drop(event, '{{ $estado }}')" 
-                         ondragover="allowDrop(event)"
+    <div class="row gy-4">
+        @foreach(['nuevo', 'ejecucion', 'espera'] as $estado)
+            <div class="col-12 col-md-4">
+                <div class="bg-light p-4 rounded shadow-sm min-vh-25"
+                     ondrop="drop(event, '{{ $estado }}')"
+                     ondragover="allowDrop(event)"
                 >
-                    <h2 class="text-lg font-bold mb-2">
+                    <h5 class="fs-5 fw-bold mb-3 text-capitalize">
                         {{ strtoupper($estado) }}
-                    </h2>
+                    </h5>
 
-                    @foreach(${'tickets' . ucfirst($estado)} as $ticket)
-                        <div 
-                            class="bg-white p-3 mb-2 rounded shadow cursor-move"
-                            draggable="true"
-                            ondragstart="drag(event)"
-                            id="ticket-{{ $ticket->id }}"
-                        >
-                            <strong>{{ $ticket->item->name }}</strong> — {{ $ticket->flaw }}
-                            <p class="text-xs text-gray-500">Prioridad: {{ $ticket->priority }}</p>
-                        </div>
-                    @endforeach
+                    {{-- Contenedor con scroll --}}
+                    <div class="kanban-scroll" style="max-height: 500px; overflow-y: auto; padding-right: 8px;">
+                        @foreach(${'tickets' . ucfirst($estado)} as $ticket)
+                           @php
+                                $priorityStyle = match((int) $ticket->priority) {
+                                    1 => 'background-color: #f8d7da; color: #721c24;', // alta
+                                    2 => 'background-color: #fff3cd; color: #856404;', // media
+                                    3 => 'background-color: #d4edda; color: #155724;', // baja
+                                    4 => 'background-color: #e2e3e5; color: #383d41;', // crítica
+                                    default => 'background-color: #ffffff; color: #212529;', // default
+                                };
+                            @endphp
+
+                            <div style="{{ $priorityStyle }} padding: 1rem; margin-bottom: 0.5rem;"
+                                class="rounded shadow-sm cursor-move"
+                                draggable="true"
+                                ondragstart="drag(event)"
+                                id="ticket-{{ $ticket->id }}"
+                            >
+                                <strong>{{ $ticket->item->name }}</strong> — {{ $ticket->flaw }}
+                                <p class="small mb-0">Prioridad: {{ $ticket->priority }}</p>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
-            @endforeach
-        </div>
+            </div>
+        @endforeach
     </div>
+</div>
 
-    <script>
-        function allowDrop(ev) {
-            ev.preventDefault();
-        }
+<script>
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
 
-        function drag(ev) {
-            ev.dataTransfer.setData("text", ev.target.id);
-        }
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
 
-        function drop(ev, nuevoEstado) {
-            ev.preventDefault();
-            const ticketId = ev.dataTransfer.getData("text").split('-')[1];
-            Livewire.emit('ticketMovido', ticketId, nuevoEstado);
-        }
-    </script>
+    function drop(ev, nuevoEstado) {
+        ev.preventDefault();
+        const ticketId = ev.dataTransfer.getData("text").split('-')[1];
+        Livewire.emit('ticketMovido', ticketId, nuevoEstado);
+    }
+</script>
 @endsection
-
