@@ -25,6 +25,9 @@
                     </a>
                     @auth
                         <div class="d-flex flex-wrap gap-2">
+                            @modulo('kanban')
+                                <x-nav-card route="dashboard.kanban" label="Tablero" />
+                            @endmodulo
                             @modulo('tickets')
                             <x-nav-card route="tickets.index" label="Tickets" />
                             @endmodulo
@@ -40,7 +43,6 @@
                             @modulo('sectors')    
                                 <x-nav-card route="sectors.index" label="Secciones" />
                             @endmodulo    
-                            
                             @modulo('states')    
                                 <x-nav-card route="states.index" label="Estados" />
                             @endmodulo    

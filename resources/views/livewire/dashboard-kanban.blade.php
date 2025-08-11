@@ -2,9 +2,8 @@
 
 @section('content'){{-- resources/views/livewire/dashboard-kanban.blade.php --}}
 
-<div class="py-4 px-3">
-    <h3 class="fs-4 fw-semibold mb-4 text-center">Tablero Kanban</h3>
-
+<!--div class="py-4 px-3"-->
+<div class="py-4 px-3 bg-secondary bg-opacity-10">
     <div class="row gy-4">
         @foreach(['nuevo', 'ejecucion', 'espera'] as $estado)
             <div class="col-12 col-md-4">
@@ -17,7 +16,7 @@
                     </h5>
 
                     {{-- Contenedor con scroll --}}
-                    <div class="kanban-scroll" style="max-height: 500px; overflow-y: auto; padding-right: 8px;">
+                    <div class="kanban-scroll" style="max-height: 400px; overflow-y: auto; padding-right: 8px;">
                         @foreach(${'tickets' . ucfirst($estado)} as $ticket)
                            @php
                                 $priorityStyle = match((int) $ticket->priority) {

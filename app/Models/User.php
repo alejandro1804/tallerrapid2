@@ -84,7 +84,7 @@ class User extends Authenticatable
     public function canAccessModule($module)
     {
         $access = [
-                'Administrador' => ['users','parts' ,'items', 'operators', 'tickets','sectors','states','providers','positions'],
+                'Administrador' => ['kanban','users','parts' ,'items', 'operators', 'tickets','sectors','states','providers','positions'],
                 'Encargado' => ['binnacles', 'tickets'],
                 'Tecnico' => ['tickets','binnacles','parts','items']
         ];
