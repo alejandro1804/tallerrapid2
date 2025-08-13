@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
-                    <div class="card-header">
+                      <div class="card-header">
                         <div style="display: flex; align-items: center; position: relative;">
                             <div style="flex: 1;">
                                 <h5>{{ __('Provider') }}</h5>
@@ -74,7 +74,7 @@
                                     @endforeach
                                 @endif    
                                 </tbody>
-                            </table>
+                            </table> 
                         </div>
                     </div>
                 </div>

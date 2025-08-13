@@ -52,7 +52,3 @@ Route::get('/items/{item}/parts', [PartController::class, 'indexpart'])->name('i
 Route::get('/dashboard-kanban', DashboardKanban::class)
     ->middleware(['auth']) // si usás autenticación
     ->name('dashboard.kanban');
-
-
-
-

@@ -29,8 +29,16 @@ class DashboardKanban extends Component
     
     public function actualizarEstado($ticketId, $nuevoEstado)
     {
+        //dd("Moviendo ticket $ticketId a estado $nuevoEstado");
+
+
         $estado = State::where('name', $nuevoEstado)->first();
-        Ticket::find($ticketId)->update(['state_id' => $estado->id]);
+        
+        if (!$estado) return;
+
+         Ticket::find($ticketId)?->update(['state_id' => $estado->id]);
+
+
         $this->loadTickets();
     }
 
@@ -39,25 +47,12 @@ class DashboardKanban extends Component
    
     public function render()
     {
-        $nombresEstados = ['NUEVO', 'EN EJECUCION', 'EN ESPERA'];
-        $ticketsPorEstado = [];
-
-        foreach ($nombresEstados as $nombre) {
-            $estado = State::where('name', $nombre)->first(); // o 'estado', según el campo real
-
-            if ($estado) {
-                $key = 'tickets' . ucfirst($nombre);
-                $ticketsPorEstado[$key] = Ticket::where('state_id', $estado->id)
-                                                ->with(['item', 'state'])
-                                                ->get();
-            } else {
-                // Si el estado no existe, devolvemos colección vacía
-                $ticketsPorEstado[$key] = collect();
-            }
-        }
-
-        return view('livewire.dashboard-kanban', $ticketsPorEstado);
+       return view('livewire.dashboard-kanban', [
+        'ticketsNuevo' => $this->ticketsNuevo,
+        'ticketsEjecucion' => $this->ticketsEjecucion,
+        'ticketsEspera' => $this->ticketsEspera,
+    ]);
+       
     }
-
-    
+  
 }

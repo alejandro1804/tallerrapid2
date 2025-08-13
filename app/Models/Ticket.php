@@ -118,4 +118,9 @@ class Ticket extends Model
     {
         return $query->whereHas('state', fn($q) => $q->where('name', $nombre));
     }
+
+    public function mount()
+{
+    $this->loadTickets();
+}
 }
