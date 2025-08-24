@@ -29,15 +29,12 @@ class DashboardKanban extends Component
     
     public function actualizarEstado($ticketId, $nuevoEstado)
     {
-        //dd("Moviendo ticket $ticketId a estado $nuevoEstado");
-
-
+        
         $estado = State::where('name', $nuevoEstado)->first();
         
         if (!$estado) return;
 
          Ticket::find($ticketId)?->update(['state_id' => $estado->id]);
-
 
         $this->loadTickets();
     }
@@ -51,8 +48,7 @@ class DashboardKanban extends Component
         'ticketsNuevo' => $this->ticketsNuevo,
         'ticketsEjecucion' => $this->ticketsEjecucion,
         'ticketsEspera' => $this->ticketsEspera,
-    ]);
-       
+        ]);
     }
   
 }
